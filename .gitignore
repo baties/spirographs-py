@@ -1,3 +1,5 @@
 .venv
 *.eps
 .vscode
+old/
+

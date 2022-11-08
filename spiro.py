@@ -14,20 +14,20 @@ import argparse
 from PIL import Image
 from datetime import datetime
 
-
 # Class for drawing a Spirograph
 class Spiro:
     # the constructor
     def __init__(self, xc, yc, col, R, r, L):
+        print('Spiro Class Init') # Batis
 
         # crate the turtle object
         self.t = turtle.Turtle()
 
         # set the cursor shape
-        self.t.shape('turtle')
+        self.t.shape('circle')  # Batis   'turtle'
 
         # set the drawings steps/increments in degrees
-        self.step = 5
+        self.step = 20  # Batis 5 
 
         # set the drawing complete flag
         # see https://docs.python.org/3.3/library/turtle.html
@@ -36,11 +36,17 @@ class Spiro:
         # set the paramaters from the functions below
         self.setparams(xc, yc, col, R, r, L)
 
+        self.t.speed(9)  # Batis
+
+        self.lColor = False  # Batis
+
         # initialize the drawing
         self.restart()
 
     # set the parameters
     def setparams(self, xc, yc, col, R, r, L):
+        print('Spiro setParams') # Batis
+
         # the Spirograph parameters
         self.xc = xc
         self.yc = yc
@@ -63,6 +69,8 @@ class Spiro:
 
     # set restart method for the drawing
     def restart(self):
+        print('Spiro restart') # Batis
+
         # set the flag
         self.drawingComplete = False
 
@@ -80,6 +88,8 @@ class Spiro:
 
     # Specify the draw method
     def draw(self):
+        print('Spiro draw') # Batis
+
         # draw the remaining points
         R, k, L, = self.R, self.k, self.L
         for i in range(0, 360*self.nRot + 1, self.step):
@@ -92,6 +102,8 @@ class Spiro:
 
     # update the drawing by one step crating animatin effect
     def update(self):
+        # print('Spiro update') # Batis
+
         # skip remaining steps if complete
         if self.drawingComplete:
             return
@@ -108,6 +120,13 @@ class Spiro:
         y = self.R*((1-k)*math.sin(a) - L*k*math.sin((1-k)*a/k))
         self.t.setpos(self.xc + x, self.yc + y)
 
+        # Add by Batis
+        if self.lColor == True:
+            if (self.a % 360) == 0:
+                sCol = (random.random(), random.random(), random.random()) # Batis  
+                self.t.color(*sCol) # Batis  
+        # Batis
+
         # if drawing is complete, set the flag
         if self.a >= 360*self.nRot:
             self.drawingComplete = True
@@ -117,23 +136,45 @@ class Spiro:
 
     # clear everything
     def clear(self):
+        print('Spiro clear') # Batis
         self.t.clear()
 
+    # Add by Batis From Here
+    def toggleColor(self):
+        sCol = (random.random(), random.random(), random.random()) # Batis  
+        self.t.color(*sCol) # Batis  
+    # Add by Batis Till Here
+
+    # Add by Batis 
+    def togglelColor(self):
+        if self.lColor == False:
+            self.lColor = True
+        else:
+            self.lColor = False
+    # Batis
 
 # class for animating the spirographs
 class SpiroAnimator:
     # constructor
     def __init__(self, N):
+        print('SpiroAnimator Init') # Batis
+
         # set the timer value in millisecords
         self.deltaT = 10
 
         # get the window dimensions
         self.width = turtle.window_width()
         self.height = turtle.window_height()
+        print(str(self.width) + "  " + str(self.height)) # Batis
+
+        self.Numb = 0  # Batis
+        self.RrLc = [[0] * 4 for i in range(N)]  # Batis
 
         # crate spiro objects
         self.spiros = []
         for i in range(N):
+
+            self.Numb  = i # Batis
 
             # generate random parameters
             rparams = self.genRandomParams()
@@ -142,11 +183,15 @@ class SpiroAnimator:
             spiro = Spiro(*rparams)
             self.spiros.append(spiro)
 
+        print(self.RrLc) # Batis
+
         # call timer
         turtle.ontimer(self.update, self.deltaT)
 
     # restart the spiro drawing
     def restart(self):
+        print('SpiroAnimator restart') # Batis
+
         for spiro in self.spiros:
 
             # clear
@@ -163,20 +208,52 @@ class SpiroAnimator:
 
     # generate random parameters
     def genRandomParams(self):
+        print('SpiroAnimator genrandomParams') # Batis
+
         width, height = self.width, self.height
-        R = random.randint(50, min(width, height)//2)
-        r = random.randint(10, 9*R//10)
+        # R = random.randint(50, min(width, height)//2)  # Batis
+        # r = random.randint(10, 9*R//10)  # Batis
+
+        ### Added By Batis From Here
+        if self.Numb == 0 :
+            minR = 50
+            minr = 10
+        else :
+            if (self.RrLc[self.Numb-1][0] < (min(width, height)//2)) :
+                minR = self.RrLc[self.Numb-1][0]
+            else:
+                minR = 50
+            if (self.RrLc[self.Numb-1][1] < (9*minR//10)):
+                minr = self.RrLc[self.Numb-1][1]
+            else:
+                minr = 10
+        ### Added By Batis till Here
+
+        R = random.randint(minR, min(width, height)//2)  # Batis
+        r = random.randint(minr, 9*R//10)  # Batis
+
         L = random.uniform(0.1, 0.9)
-        xc = random.randint(-width//2, width//2)
-        yc = random.randint(-height//2, height//2)
+        # xc = random.randint(-width//2, width//2)  # Batis
+        # yc = random.randint(-height//2, height//2)  # Batis
+        xc = 0 # Batis
+        yc = 0 # Batis
         col = (random.random(),
                random.random(),
                random.random()
                )
+
+        self.RrLc[self.Numb] = [R,r,L,col]  # Batis
+
+        print("R = " + str(R) + "  *  r = " + str(r) + "  *  L = " + str(L)) # Batis
+        print(col) # Batis
+        print("xc = "+ str(xc) + "  *  yc = " + str(yc)) # Batis
+
         return(xc, yc, col, R, r, L)
 
     # update method
     def update(self):
+        # print('SpiroAnimator update') # Batis
+
         # Update all spiros
         numComplete = 0
         for spiro in self.spiros:
@@ -184,28 +261,52 @@ class SpiroAnimator:
             # update
             spiro.update()
 
+            # sCol = (random.random(), random.random(), random.random()) # Batis  (Add & Comment)
+            # spiro.t.color(*sCol) # Batis  (Add & Comment)
+
             # count completed spiros
             if spiro.drawingComplete:
                 numComplete += 1
 
         # restart if all spiros are complete
-        if numComplete == len(self.spiros):
-            self.restart()
+        # if numComplete == len(self.spiros):  # Batis
+            # self.restart()  # Batis
 
         # call the timer
         turtle.ontimer(self.update, self.deltaT)
 
     # toggle cursor
     def toggleTurtles(self):
+        print('SpiroAnimator toggle Turtle') # Batis
+
         for spiro in self.spiros:
             if spiro.t.isvisible():
                 spiro.t.hideturtle()
             else:
+                # if spiro.drawingComplete == True:  # Batis
                 spiro.t.showturtle()
+
+    # Add by Batis From Here
+    def toggleSColor(self):
+        for spiro in self.spiros:
+            sCol = (random.random(), random.random(), random.random()) # Batis  
+            spiro.t.color(*sCol) # Batis  
+    # Add by Batis Till Here
+
+    # Add by Batis 
+    def toggleSlColor(self):
+        for spiro in self.spiros:
+            if spiro.lColor == False:
+                spiro.lColor = True
+            else:
+                spiro.lColor = False
+    # Batis
 
 
 # save drawings to PNG files
 def saveDrawing():
+    print('Save Drawing') # Batis
+
     # hide the turtle cursor
     turtle.hideturtle()
 
@@ -226,6 +327,20 @@ def saveDrawing():
 
     # show the turtle cursor
     turtle.showturtle()
+
+
+# Add by Batis From Here
+def toggleBKColor():
+    global BKColor # Batis
+
+    if BKColor == 'White' :
+        turtle.getscreen().bgcolor('black') 
+        BKColor = 'Black'
+    else :
+        turtle.getscreen().bgcolor('white')
+        BKColor = 'White'
+# Add by Batis Till Here
+
 
 
 # The main() function
@@ -253,8 +368,13 @@ def main():
     # parse args
     args = parser.parse_args()
 
+    global BKColor # Batis
+    BKColor = 'White'  # Batis
+
+    # turtle.getscreen().bgcolor('black') # Batis    
+
     # set width of the spiro drawing window 60% of the screen width, height
-    turtle.setup(width=0.6, height=0.6)
+    turtle.setup(width=1.0, height=1.0) # Batis width=0.6, height=0.6
 
     # set shape of the turtle cursor
     turtle.shape('turtle')
@@ -265,6 +385,8 @@ def main():
     # add the key handler to save your drawings
     turtle.onkey(saveDrawing, "s")
 
+    turtle.onkey(toggleBKColor, "b") # Batis
+
     # start listening
     turtle.listen()
 
@@ -274,14 +396,26 @@ def main():
     # check for any arguments sent to --sparams and draw the Spirograph
     if args.sparams:
         params = [float(x) for x in args.sparams]
+        print(params)
 
         # draw the Spirograph with the given parameters
-        col = (0.0, 0.0, 0.0)
+        # col = (0.0, 0.0, 0.0)
+        col = (random.random(),
+               random.random(),
+               random.random()
+               )
+        print(col)
         spiro = Spiro(0, 0, col, *params)
+
+        turtle.onkey(spiro.toggleColor, "c") # Batis
+
+        turtle.onkey(spiro.togglelColor, "h") # Batis
+
         spiro.draw()
+
     else:
         # create the animator object
-        spiroAnim = SpiroAnimator(4)
+        spiroAnim = SpiroAnimator(3) # Batis 4
 
         # add a keyhandler to toggle the turtle cursor
         turtle.onkey(spiroAnim.toggleTurtles, "t")
@@ -289,8 +423,13 @@ def main():
         # add a keyhandler to restart the animation
         turtle.onkey(spiroAnim.restart, "space")
 
+        turtle.onkey(spiroAnim.toggleSColor, "x") # Batis
+
+        turtle.onkey(spiroAnim.toggleSlColor, "z") # Batis
+
+
     # start the turtle main loop
-    turtle.mainloop()
+    turtle.mainloop()  
 
 
 # call main
