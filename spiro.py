@@ -13,12 +13,13 @@ import random
 import argparse
 from PIL import Image
 from datetime import datetime
+import logging # Batis
 
 # Class for drawing a Spirograph
 class Spiro:
     # the constructor
     def __init__(self, xc, yc, col, R, r, L):
-        print('Spiro Class Init') # Batis
+        logging.info('Spiro Class Init') # Batis
 
         # crate the turtle object
         self.t = turtle.Turtle()
@@ -36,7 +37,7 @@ class Spiro:
         # set the paramaters from the functions below
         self.setparams(xc, yc, col, R, r, L)
 
-        self.t.speed(9)  # Batis
+        self.t.speed(20)  # Batis
 
         self.lColor = False  # Batis
 
@@ -45,7 +46,7 @@ class Spiro:
 
     # set the parameters
     def setparams(self, xc, yc, col, R, r, L):
-        print('Spiro setParams') # Batis
+        logging.info('Spiro setParams') # Batis
 
         # the Spirograph parameters
         self.xc = xc
@@ -69,7 +70,7 @@ class Spiro:
 
     # set restart method for the drawing
     def restart(self):
-        print('Spiro restart') # Batis
+        logging.info('Spiro restart') # Batis
 
         # set the flag
         self.drawingComplete = False
@@ -88,7 +89,7 @@ class Spiro:
 
     # Specify the draw method
     def draw(self):
-        print('Spiro draw') # Batis
+        logging.info('Spiro draw') # Batis
 
         # draw the remaining points
         R, k, L, = self.R, self.k, self.L
@@ -102,7 +103,7 @@ class Spiro:
 
     # update the drawing by one step crating animatin effect
     def update(self):
-        # print('Spiro update') # Batis
+        # logging.info('Spiro update') # Batis
 
         # skip remaining steps if complete
         if self.drawingComplete:
@@ -136,7 +137,7 @@ class Spiro:
 
     # clear everything
     def clear(self):
-        print('Spiro clear') # Batis
+        logging.info('Spiro clear') # Batis
         self.t.clear()
 
     # Add by Batis From Here
@@ -157,7 +158,7 @@ class Spiro:
 class SpiroAnimator:
     # constructor
     def __init__(self, N):
-        print('SpiroAnimator Init') # Batis
+        logging.info('SpiroAnimator Init') # Batis
 
         # set the timer value in millisecords
         self.deltaT = 10
@@ -190,7 +191,7 @@ class SpiroAnimator:
 
     # restart the spiro drawing
     def restart(self):
-        print('SpiroAnimator restart') # Batis
+        logging.info('SpiroAnimator restart') # Batis
 
         for spiro in self.spiros:
 
@@ -208,7 +209,7 @@ class SpiroAnimator:
 
     # generate random parameters
     def genRandomParams(self):
-        print('SpiroAnimator genrandomParams') # Batis
+        logging.info('SpiroAnimator genrandomParams') # Batis
 
         width, height = self.width, self.height
         # R = random.randint(50, min(width, height)//2)  # Batis
@@ -246,13 +247,13 @@ class SpiroAnimator:
 
         print("R = " + str(R) + "  *  r = " + str(r) + "  *  L = " + str(L)) # Batis
         print(col) # Batis
-        print("xc = "+ str(xc) + "  *  yc = " + str(yc)) # Batis
+        print("xc = " + str(xc) + "  *  yc = " + str(yc)) # Batis
 
         return(xc, yc, col, R, r, L)
 
     # update method
     def update(self):
-        # print('SpiroAnimator update') # Batis
+        # logging.info('SpiroAnimator update') # Batis
 
         # Update all spiros
         numComplete = 0
@@ -277,7 +278,7 @@ class SpiroAnimator:
 
     # toggle cursor
     def toggleTurtles(self):
-        print('SpiroAnimator toggle Turtle') # Batis
+        logging.info('SpiroAnimator toggle Turtle') # Batis
 
         for spiro in self.spiros:
             if spiro.t.isvisible():
@@ -305,7 +306,7 @@ class SpiroAnimator:
 
 # save drawings to PNG files
 def saveDrawing():
-    print('Save Drawing') # Batis
+    logging.info('Save Drawing') # Batis
 
     # hide the turtle cursor
     turtle.hideturtle()
@@ -313,7 +314,7 @@ def saveDrawing():
     # generate unique filenames
     dateStr = (datetime.now()).strftime("%d%b%Y-%H%M%S")
     fileName = 'spiro-' + dateStr
-    print('saving drawing to %s.esp/png' % fileName)
+    logging.info('saving drawing to %s.esp/png' % fileName)
 
     # get the tkinter canvas
     canvas = turtle.getcanvas()
@@ -345,8 +346,11 @@ def toggleBKColor():
 
 # The main() function
 def main():
+    logging.basicConfig(filename='myLog.log', encoding='utf-8', level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p') # Batis
+
+
     # use sys.argv if needed
-    print('generating spirograph...')
+    logging.info('generating spirograph...')
 
     # create parser
     descStr = """This program draws Spirographs using the turtle module.
@@ -396,7 +400,7 @@ def main():
     # check for any arguments sent to --sparams and draw the Spirograph
     if args.sparams:
         params = [float(x) for x in args.sparams]
-        print(params)
+        print(params) # Batis
 
         # draw the Spirograph with the given parameters
         # col = (0.0, 0.0, 0.0)
@@ -404,7 +408,7 @@ def main():
                random.random(),
                random.random()
                )
-        print(col)
+        print(col) # Batis
         spiro = Spiro(0, 0, col, *params)
 
         turtle.onkey(spiro.toggleColor, "c") # Batis
