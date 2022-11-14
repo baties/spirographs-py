@@ -24,6 +24,8 @@ class Spiro:
         # crate the turtle object
         self.t = turtle.Turtle()
 
+        # self.t.setfillopacity(50)  # Batis
+
         # set the cursor shape
         self.t.shape('circle')  # Batis   'turtle'
 
@@ -374,6 +376,9 @@ def main():
 
     global BKColor # Batis
     BKColor = 'White'  # Batis
+
+    global cOpacity # Batis
+    cOpacity = 0.5 # 50% Color Opacity   # Batis
 
     # turtle.getscreen().bgcolor('black') # Batis    
 
