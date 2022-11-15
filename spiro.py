@@ -407,6 +407,11 @@ def main():
         params = [float(x) for x in args.sparams]
         print(params) # Batis
 
+        root = (turtle
+            .getcanvas()
+            .winfo_toplevel())
+        root.attributes('-alpha', 0.3)
+
         # draw the Spirograph with the given parameters
         # col = (0.0, 0.0, 0.0)
         col = (random.random(),
